@@ -1,0 +1,30 @@
+```{r}
+library(kmers.profile)
+
+download_virus("../data/virus/Virus_list.csv","../data/virus/reference/","all")
+download_vector("../data/vector/Vector_list.csv","../data/vector/reference/")
+```
+
+```{r}
+Virus_list <- read.csv("../data/virus/Virus_list.csv")
+Vector_list <-read.csv("../data/vector/Vector_list.csv")
+size <- "1000000"
+
+
+gen_ID <- Vector_list$NCBI.RefSeq.assembly
+# Input and output file names
+for (ID in gen_ID){
+  print(ID)
+  input_file <- paste("../data/vector/reference/",ID,"_genomic_refseq.fna",sep ="")
+  output_file <- paste("../data/vector/chr1/",ID,"_chr1_",size,".fna",sep = "")
+  sequences <- readDNAStringSet(input_file)
+  if (length(sequences) > 0) {
+    selected_sequence <- sequences[1]
+    trimmed_sequence <- subseq(selected_sequence, start = 1, end = as.integer(size))
+    writeXStringSet(trimmed_sequence, filepath = output_file, format = "fasta")
+  } else {
+      message("No sequences found in the input file.")
+  }
+}
+```
+

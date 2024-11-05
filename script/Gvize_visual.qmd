@@ -1,0 +1,91 @@
+```{r}
+library(Gviz)
+library(Biostrings)
+```
+
+```{r}
+genome_vir <- readDNAStringSet("../data/virus/reference/dengue_virus_type_1.fasta")[[1]]
+
+kmer <- "ACAAGA"
+kmer_pos <- matchPattern(kmer, genome_vir)
+kmer_starts <- start(kmer_pos)
+kmer_ends <- end(kmer_pos)
+
+kmer2 <- "ACAAGA"
+kmer_pos2 <- matchPattern(kmer2, genome_vir)
+kmer_starts2 <- start(kmer_pos2)
+kmer_ends2 <- end(kmer_pos2)
+
+df1 <- data.frame(start = kmer_starts, end = kmer_ends, strand = "+")
+df2 <- data.frame(start = kmer_starts2, end = kmer_ends2, strand = "+")
+
+# Tracks
+genomeTrack <- GenomeAxisTrack()
+kmerTrack1 <- AnnotationTrack(start = df1$start, end = df1$end, name = kmer, fill = "red", chromosome = "chr1")
+kmerTrack2 <- AnnotationTrack(start = df2$start, end = df2$end, name = kmer2, fill = "blue", chromosome = "chr1")
+
+genome_length <- nchar(genome_vir)
+plotTracks(list(genomeTrack, kmerTrack1, kmerTrack2), from = 1, to = genome_length, margin = 10,sizes=c(0.5,0.5,0.5), stacking = "dense")
+```
+
+```{r}
+# Load required libraries
+library(Biostrings)
+library(Gviz)
+
+# Read the genome and search for the kmer
+genome_vir <- readDNAStringSet("../data/vector/reference/GCF_002204515.2_genomic_refseq.fna")[[1]]
+kmer <- "ACAAGA"
+kmer_pos <- matchPattern(kmer, genome_vir)
+kmer_starts <- start(kmer_pos)
+kmer_ends <- end(kmer_pos)
+
+# Create a data frame with chromosome information
+df1 <- data.frame(start = kmer_starts, end = kmer_ends, chromosome = "chr1", strand = "+")
+
+# Set up tracks for plotting
+genomeTrack <- GenomeAxisTrack()
+kmerTrack1 <- AnnotationTrack(start = df1$start, end = df1$end, chromosome = df1$chromosome, 
+                              strand = df1$strand, name = kmer, fill = "red")
+
+# Only plot a subset range, e.g., first 10,000 bases
+plotTracks(list(genomeTrack, kmerTrack1), from = 1, to = min(10000, nchar(genome_vir)), 
+           margin = 10, sizes = c(0.5, 0.5), stacking = "dense")
+
+```
+
+```{r}
+# Moustique + Virus
+test_reads <- readDNAStringSet("../data/testing_data/raw_fasta_files/DENV_aedes_D7.fasta")
+
+process_fasta_test <- function(test_reads, kmer) {
+  
+  # Calculate the number of reads
+  total_reads <- length(test_reads)
+  
+  # Count the appearances of the specified k-mer
+  kmer_count <- sum(vcountPattern(kmer, test_reads))
+  
+  # Calculate the total length of the filtered test_reads
+  total_length <- sum(width(test_reads))
+  
+  # Print results
+  cat("Total number of reads processed:", total_reads, "\n")
+  cat("K-mer (", kmer, ") count:", kmer_count, "\n")
+  cat("Total length of retained test_reads:", total_length, "\n")
+  cat("count/size_genome:", (kmer_count / total_length), "\n")
+  # Optionally save the counts to a file
+  counts <- data.frame(Kmer = kmer, Count = kmer_count, Total_Length = total_length)
+}
+
+process_fasta_test(test_reads, "ACATGG")
+```
+
+```{r}
+# Moustique seul
+background <- readDNAStringSet("../data/testing_data/raw_fasta_files/Aedes_aegypti_sequences.fasta")
+
+process_fasta_test(background, "ACATGG")
+```
+
+

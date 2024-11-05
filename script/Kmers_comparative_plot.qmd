@@ -1,0 +1,93 @@
+```{r}
+library(dplyr)     # Data manipulation
+library(purrr)
+library(tidyr)     # For drop_na()
+library(kmers.profile)
+virus_name <- "??"
+for (k in 4:8){
+  print(k)
+  x <- 100
+  
+  # Gen dist DF virus
+  print("getting kmers")
+  #virus_genome_path <- paste("../data/virus/reference/",virus_name,".fasta",sep = "")
+  #best_kmers_list <- gen_spe_first_obs_kmers(virus_genome_path,k,x)
+  v_fasta_folder <- "../data/virus/all_dengue/"
+  best_kmers_list <- gen_gen_first_obs_kmers(v_fasta_folder,k,x)
+  # --------- #
+  print("getting pos df")
+  #kmers_pos_df <- gen_kmers_pos_df(virus_genome_path,best_kmers_list,virus_name)
+  
+  comb_v_kmer_pos_df <- list() 
+  v_fasta_files <- tools::file_path_sans_ext(list.files(path = v_fasta_folder ,pattern = "\\.(fasta)$",full.names = FALSE))
+  for (v_fasta_file in v_fasta_files) {    
+    v_kmer_pos_df <- gen_kmers_pos_df(paste("../data/virus/reference/",v_fasta_file,".fasta",sep = ""), best_kmers_list,v_fasta_file)
+    comb_v_kmer_pos_df[[length(comb_v_kmer_pos_df) + 1]] <- v_kmer_pos_df
+  }
+  comb_v_kmer_pos_df <- do.call(rbind, comb_v_kmer_pos_df)
+  
+  # -------- #
+  print("getting t_test")
+  
+  m_fasta_files <- tools::file_path_sans_ext(list.files(path = "../data/vector/Aedes/",full.names = FALSE))
+  kmer_pos_list <- list()
+  for (m_fasta_file in m_fasta_files) {
+    m_kmer_pos_df <- gen_kmers_pos_df(paste("../data/vector/chr1/", m_fasta_file, ".fna", sep = ""), best_kmers_list, m_fasta_file)
+    kmer_pos_list[[m_fasta_file]] <- m_kmer_pos_df
+    #write.csv(m_kmer_pos_df, file = paste("../data/kmers/", m_fasta_file, "_kmer_pos_df.csv", sep = ""), row.names = FALSE)
+  }
+  comb_m_pos_df <- do.call(rbind, kmer_pos_list)
+  
+  results_df <- get_t_test(comb_v_kmer_pos_df,comb_m_pos_df)
+  write.csv(results_df,paste("../result/",k,"_all_dengue.csv",sep = ""))
+
+}
+```
+
+
+
+
+```{r}
+all_result_files <- tools::file_path_sans_ext(list.files(path = "../result/",pattern = "\\.(csv)$",full.names = FALSE))
+kmer_4  <- read.csv("../result/4_all_dengue.csv")
+kmer_5  <- read.csv("../result/5_all_dengue.csv")
+kmer_6  <- read.csv("../result/6_all_dengue.csv")
+kmer_7  <- read.csv("../result/7_all_dengue.csv")
+kmer_8  <- read.csv("../result/8_all_dengue.csv")
+#kmer_9  <- read.csv("../result/9_dengue_type_3.csv")
+
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+combined_data <- bind_rows(
+  mutate(kmer_4, Series = "Kmer 4"),
+  mutate(kmer_5, Series = "Kmer 5"),
+  mutate(kmer_6, Series = "Kmer 6"),
+  mutate(kmer_7, Series = "Kmer 7"),
+  mutate(kmer_8, Series = "Kmer 8")
+#  mutate(kmer_9, Series = "Kmer 9")
+)
+
+# Filter for the 10 smallest values in each series
+filtered_data <- combined_data %>%
+  group_by(Series) %>%
+  slice_min(order_by = t_statistic, n = 2)
+
+# Create the plot
+ggplot(filtered_data, aes(x = Series, y = -t_statistic, label = Kmer, color = Series)) +
+  geom_text(aes(label = paste(Kmer, "\n", round(difference, 2))),  # Rounds difference to 2 decimal places
+            position = position_jitter(width = 0, height = 0), 
+            size = 4) +  # Slightly smaller size
+  labs(x = "Kmer Series", y = "- T-statistic", title = "Kmer vs - T-statistic for All Dengue Types (only Aedes)") +
+  theme_minimal() +
+  #scale_color_manual(values = c("Kmer 5" = "blue", "Kmer 6" = "blue", "Kmer 7" = "blue")) +
+  theme(
+    legend.position = "none",  # Hides the legend
+    axis.title = element_text(size = 12, face = "bold"),  # Bold and smaller axis titles
+    axis.text = element_text(size = 12, face = "bold"),  # Bold and smaller axis text
+    plot.title = element_text(size = 15, face = "bold")  # Bold and smaller plot title
+  )
+
+```
+
