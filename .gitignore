@@ -1,5 +1,3 @@
-data_processed/*
-!data_processed/.gitkeep
 data_processed/virus/*
 !data_processed/virus/.gitkeep
 data_processed/vector/*
