@@ -1,2 +1,6 @@
 data_processed/*
 !data_processed/.gitkeep
+virus/*
+!virus/.gitkeep
+vector/*
+!vector/.gitkeep
