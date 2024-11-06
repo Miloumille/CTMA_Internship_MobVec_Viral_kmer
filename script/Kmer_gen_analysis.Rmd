@@ -17,16 +17,6 @@ v_fasta_folder <- "../data/virus/all_dengue/"
 m_fasta_files <- tools::file_path_sans_ext(list.files(path = "../data/vector/chr1/",full.names = FALSE))
 
 best_kmers_list <- gen_gen_first_obs_kmers(v_fasta_folder,k,x)
-best_kmers_list <- c(best_kmers_list, "CCTTCT") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "AACCTG") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "CAAGGT") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "CCACCA") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "TCCTCT") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "AACCAA") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "AACCAG") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "GAACCT") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "ACAAGA") ### ADD one manually
-best_kmers_list <- c(best_kmers_list, "GGAAGC") ### ADD one manually
 # Create Virus dist DF
 comb_v_kmer_pos_df <- list() 
 v_fasta_files <- tools::file_path_sans_ext(list.files(path = v_fasta_folder ,pattern = "\\.(fasta)$",full.names = FALSE))

@@ -2,3 +2,4 @@ data_processed/virus/*
 !data_processed/virus/.gitkeep
 data_processed/vector/*
 !data_processed/vector/.gitkeep
+.Rproj.user
