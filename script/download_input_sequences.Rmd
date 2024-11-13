@@ -1,0 +1,68 @@
+---
+title: "Download virus and mosquito genomes and RNAseq data"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup include = FALSE}
+
+```
+
+Setup of download_virus enabling the download of data from a csv file. This allows to get or all genomes in one command or to select which genome will be downloaded.
+
+```{r}
+download_virus <- function(path_csv_file,path_output,virus_name = "all"){
+  Virus_csv <- read.csv(path_csv_file)
+  if (virus_name == "all"){
+    for (name in unique(Virus_csv$name)){
+      print(paste("downloading",name))
+      ids <- Virus_csv$accession_code[Virus_csv$name == name]
+      combined_sequences <- rentrez::entrez_fetch(db = "nuccore", id = ids, rettype = "fasta", retmode = "text")
+      write(combined_sequences, file = paste(path_output,name,".fasta",sep = ""))
+    }
+  }
+  else{
+    ids <- Virus_csv$accession_code[Virus_csv$name == virus_name]
+    print(paste("downloading",name))
+    combined_sequences <- rentrez::entrez_fetch(db = "nuccore", id = ids, rettype = "fasta", retmode = "text")
+    write(combined_sequences, file = paste(path_output,virus_name,".fasta",sep = ""))
+  }
+}
+```
+
+Setup of download function for getting fasq DNAseq data from NCBI with their accession codes. This function need a docker image installation of sra-tools in order to acces the data. The function allows to decide how much sequences for a accession_code will be downloaded allowing to try the pipeline on smaller samples first.
+
+```{r}
+download_fastq_vector <- function(accession_id, output_dir, n_reads) {
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  fastq_dump_command <- c(
+    "run",
+    "--rm",
+    "-v", paste0(normalizePath(output_dir), ":/output"),
+    "ncbi/sra-tools",
+    "fastq-dump",
+    accession_id,
+    "--outdir", "/output",
+    "--split-files",
+    paste0("-X ", n_reads)
+  )
+  
+  # Run the Docker command
+  system2("docker", args = fastq_dump_command, stdout = TRUE, stderr = TRUE)
+}
+```
+
+# Download Vector fastq sequences.
+
+```{r}
+accession_id <- "SRR8482205"
+output_dir <- "data_processed/vector/RNA_seq"
+number_of_sequences <- 10000
+download_fastq_vector(accession_id, output_dir, number_of_sequences)
+```
+
+# Download Virus genomes.
+
+```{r}
+download_virus("data_processed/virus/Virus_list.csv","data_processed/virus/reference/","Alphacoronavirus")
+```

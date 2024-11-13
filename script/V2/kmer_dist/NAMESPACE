@@ -1,8 +1,0 @@
-export(download_data)
-export(download_virus)
-export(gen_kmers_pos_df)
-export(get_t_test)
-export(gen_kmers_first_pos_df)
-export(gen_spe_first_obs_kmers)
-export(gen_obs_kmers)
-export(gen_gen_first_obs_kmers)
