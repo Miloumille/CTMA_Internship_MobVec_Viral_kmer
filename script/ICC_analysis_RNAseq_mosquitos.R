@@ -1,4 +1,4 @@
-library(kmer.dist)
+library(KmerEnrich)
 library(ShortRead)
 library(psych) 
 library(dplyr)
@@ -7,13 +7,13 @@ library(tidyr)
 
 
 
-virus_name <- "dengue_virus_type_1"
-virus_path <- "data_processed/virus/reference/dengue_virus_type_1.fasta"
-fastq_path <- "data_processed/vector/RNA_seq/"
-fastq_id_list <- c("SRR23079314","SRR8482202","SRR29420355","SRR8482204")
-
+virus_path <- "data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"
+fastq_path_list <- c("data_processed/vector/aedes/aegypty/SRR23079314",
+                     "data_processed/vector/aedes/albopictus/SRR8482202",
+                     "data_processed/vector/aedes/albopictus/SRR8482203",
+                     "data_processed/vector/aedes/albopictus/SRR8482204")
 k <- 6
-x <- 100
+x <- 500
 
 
 generate_kmers <- function(k,sample_size) {
@@ -22,17 +22,15 @@ generate_kmers <- function(k,sample_size) {
   kmers <- sample(all_kmers, sample_size)
   return(kmers)
 }
-kmers <- generate_kmers(6,40)
+kmers <- generate_kmers(6,400)
 
 
-v_kmer_pos_df <- gen_kmers_pos_df(virus_path, kmers, virus_name)
-v_kmers_stats <- get_stats_kmers(v_kmer_pos_df)
-
-kmer_freq_list <- list()
+v_kmer_pos_df <- kmers_pos_df(virus_path, kmers)
+v_kmers_stats <- get_virus_stats_kmers(v_kmer_pos_df)
 
 
-complete_kmer_stats <- get_kmer_freq(v_kmers_stats, fastq_path, fastq_id_list)
-complete_kmer_stats$y_value <- log10(complete_kmer_stats$mean_freq_virus) - log10(complete_kmer_stats$freq_m)
+complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, fastq_path_list)
+complete_kmer_stats$y_value <- (log10(complete_kmer_stats$mean_freq_virus) - log10(complete_kmer_stats$freq_m))
 
 df_selected <- complete_kmer_stats %>%
   select(accession_id, y_value)
@@ -49,7 +47,7 @@ print(icc_result)
 
 ####    GRAPH     ####
 
-complete_kmer_stats <- complete_kmer_stats[, !colnames(complete_kmer_stats) %in% "mean_count"]
+#complete_kmer_stats <- complete_kmer_stats[, !colnames(complete_kmer_stats) %in% "mean_count"]
 
 ggplot(complete_kmer_stats, aes(x = factor(Kmer), y = y_value, color = accession_id)) + 
   geom_line(aes(group = Kmer), color = "gray", position = position_dodge(width = 0.2)) +  # Lines are gray
@@ -62,6 +60,20 @@ ggplot(complete_kmer_stats, aes(x = factor(Kmer), y = y_value, color = accession
     plot.margin = margin(10, 30, 10, 10), 
     plot.title = element_text(size = 10)
   )
+
+####### Try Report generation 
+
+library(KmerEnrich)
+
+virus_folder <- "data_processed/virus/dengue/"
+vector_genome_path <- c("data_processed/vector/aedes/aegypty/SRR23079314")
+k <- c(5,6)
+x <- 500
+
+
+KmerEnrichFullReport(virus_folder, vector_genome_path, k, x,"my_report2.html")
+
+
 
 
 

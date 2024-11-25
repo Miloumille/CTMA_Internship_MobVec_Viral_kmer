@@ -1,91 +1,125 @@
+
+
 ```{r}
 library(Gviz)
 library(Biostrings)
-```
 
-```{r}
-genome_vir <- readDNAStringSet("../data/virus/reference/dengue_virus_type_1.fasta")[[1]]
+# Define the vector of paths to the FASTA files
+fasta_paths <- c(
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta", 
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta", 
+  "../data_processed/virus/dengue/dengue_type_3/NC_001475.2.fasta", 
+  "../data_processed/virus/dengue/dengue_type_4/NC_002640.1.fasta"
+)
 
-kmer <- "ACAAGA"
-kmer_pos <- matchPattern(kmer, genome_vir)
-kmer_starts <- start(kmer_pos)
-kmer_ends <- end(kmer_pos)
+# Define the k-mer of interest
+kmer <- "AGAGAG"
 
-kmer2 <- "ACAAGA"
-kmer_pos2 <- matchPattern(kmer2, genome_vir)
-kmer_starts2 <- start(kmer_pos2)
-kmer_ends2 <- end(kmer_pos2)
-
-df1 <- data.frame(start = kmer_starts, end = kmer_ends, strand = "+")
-df2 <- data.frame(start = kmer_starts2, end = kmer_ends2, strand = "+")
-
-# Tracks
-genomeTrack <- GenomeAxisTrack()
-kmerTrack1 <- AnnotationTrack(start = df1$start, end = df1$end, name = kmer, fill = "red", chromosome = "chr1")
-kmerTrack2 <- AnnotationTrack(start = df2$start, end = df2$end, name = kmer2, fill = "blue", chromosome = "chr1")
-
-genome_length <- nchar(genome_vir)
-plotTracks(list(genomeTrack, kmerTrack1, kmerTrack2), from = 1, to = genome_length, margin = 10,sizes=c(0.5,0.5,0.5), stacking = "dense")
-```
-
-```{r}
-# Load required libraries
-library(Biostrings)
-library(Gviz)
-
-# Read the genome and search for the kmer
-genome_vir <- readDNAStringSet("../data/vector/reference/GCF_002204515.2_genomic_refseq.fna")[[1]]
-kmer <- "ACAAGA"
-kmer_pos <- matchPattern(kmer, genome_vir)
-kmer_starts <- start(kmer_pos)
-kmer_ends <- end(kmer_pos)
-
-# Create a data frame with chromosome information
-df1 <- data.frame(start = kmer_starts, end = kmer_ends, chromosome = "chr1", strand = "+")
-
-# Set up tracks for plotting
-genomeTrack <- GenomeAxisTrack()
-kmerTrack1 <- AnnotationTrack(start = df1$start, end = df1$end, chromosome = df1$chromosome, 
-                              strand = df1$strand, name = kmer, fill = "red")
-
-# Only plot a subset range, e.g., first 10,000 bases
-plotTracks(list(genomeTrack, kmerTrack1), from = 1, to = min(10000, nchar(genome_vir)), 
-           margin = 10, sizes = c(0.5, 0.5), stacking = "dense")
-
-```
-
-```{r}
-# Moustique + Virus
-test_reads <- readDNAStringSet("../data/testing_data/raw_fasta_files/DENV_aedes_D7.fasta")
-
-process_fasta_test <- function(test_reads, kmer) {
-  
-  # Calculate the number of reads
-  total_reads <- length(test_reads)
-  
-  # Count the appearances of the specified k-mer
-  kmer_count <- sum(vcountPattern(kmer, test_reads))
-  
-  # Calculate the total length of the filtered test_reads
-  total_length <- sum(width(test_reads))
-  
-  # Print results
-  cat("Total number of reads processed:", total_reads, "\n")
-  cat("K-mer (", kmer, ") count:", kmer_count, "\n")
-  cat("Total length of retained test_reads:", total_length, "\n")
-  cat("count/size_genome:", (kmer_count / total_length), "\n")
-  # Optionally save the counts to a file
-  counts <- data.frame(Kmer = kmer, Count = kmer_count, Total_Length = total_length)
+# Function to read a FASTA file and find k-mer positions
+find_kmer_positions <- function(fasta_path, kmer) {
+  genome <- readDNAStringSet(fasta_path)[[1]]  # Read the genome from FASTA file
+  kmer_pos <- matchPattern(kmer, genome)
+  starts <- start(kmer_pos)
+  ends <- end(kmer_pos)
+  return(data.frame(start = starts, end = ends, strand = "+"))
 }
 
-process_fasta_test(test_reads, "ACATGG")
+# Create genome axis track
+genomeTrack <- GenomeAxisTrack()
+
+# Create a list to store the annotation tracks
+kmerTracks <- list()
+
+# Read the reference genome from the first file
+reference_genome <- readDNAStringSet(fasta_paths[1])[[1]]
+
+# Create the reference k-mer track
+kmerTracks[[1]] <- AnnotationTrack(start = find_kmer_positions(fasta_paths[1], kmer)$start, 
+                                   end = find_kmer_positions(fasta_paths[1], kmer)$start + 1,
+                                   name = "Reference", chromosome = "chr1", fill = "red", height = 0.5)
+
+# Define colors for the variants (other than the reference)
+variant_colors <- c("blue", "green", "orange")
+
+# Loop through the other FASTA files and create corresponding annotation tracks
+for (i in 2:length(fasta_paths)) {
+  variant_name <- paste("Variant", i - 1, sep = " ")
+  df_variant <- find_kmer_positions(fasta_paths[i], kmer)
+  kmerTracks[[i]] <- AnnotationTrack(start = df_variant$start, 
+                                     end = df_variant$start + 1,
+                                     name = variant_name, 
+                                     chromosome = "chr1", 
+                                     fill = variant_colors[i - 1], 
+                                     height = 0.5)
+}
+
+# Calculate genome length (using the reference genome)
+genome_length <- nchar(reference_genome)
+
+# Plot tracks together
+plotTracks(kmerTracks, from = 1, to = genome_length, margin = 10, sizes = rep(0.5, length(kmerTracks)), stacking = "dense")
 ```
+
 
 ```{r}
-# Moustique seul
-background <- readDNAStringSet("../data/testing_data/raw_fasta_files/Aedes_aegypti_sequences.fasta")
+library(ggplot2)
+library(Biostrings)
+library(reshape2)
 
-process_fasta_test(background, "ACATGG")
+# Define the vector of paths to the FASTA files
+fasta_paths <- c(
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta", 
+  "../data_processed/virus/dengue/dengue_type_3/NC_001475.2.fasta", 
+  "../data_processed/virus/dengue/dengue_type_4/NC_002640.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/PQ357536.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/PQ357537.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/PQ357538.1.fasta",
+  "../data_processed/virus/dengue/dengue_type_1/PQ357540.1.fasta"
+)
+
+# Define the k-mer of interest
+kmer <- "AGAGAG"
+
+# Function to read a FASTA file and find k-mer positions
+find_kmer_positions <- function(fasta_path, kmer) {
+  genome <- readDNAStringSet(fasta_path)[[1]]  # Read the genome from FASTA file
+  kmer_pos <- matchPattern(kmer, genome)  # Find all positions of the k-mer
+  starts <- start(kmer_pos)  # Get the start positions of the matches
+  return(data.frame(Position = starts, Genome = basename(fasta_path)))  # Return positions with genome name
+}
+
+# Create an empty list to store the data frames for each genome
+kmer_data_list <- list()
+
+# Loop through each FASTA file and extract k-mer positions
+for (i in 1:length(fasta_paths)) {
+  kmer_data_list[[i]] <- find_kmer_positions(fasta_paths[i], kmer)
+}
+
+# Combine all the k-mer data into one data frame
+kmer_data <- do.call(rbind, kmer_data_list)
+
+# Now, let's plot the k-mer positions using ggplot2
+ggplot(kmer_data, aes(x = Position, y = Genome, color = Genome)) +
+  geom_point(size = 1, shape = 16) +  # Add points (dots) at the positions where k-mer is found
+  labs(title = paste("K-mer Presence: ", kmer), 
+       x = "Genomic Position", 
+       y = "Genome") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = "none") +
+  scale_color_brewer(palette = "Set3") +  # Assign a color palette to the genomes
+  coord_cartesian(clip = 'off')
 ```
-
-

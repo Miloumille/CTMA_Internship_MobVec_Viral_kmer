@@ -9,7 +9,7 @@ library(Biostrings)
 library(stringr)
 library(dplyr)
 library(ggplot2)
-library(kmer.dist)
+library(KmerEnrich)
 library(data.table)
 library(ShortRead)
 ```
@@ -17,10 +17,8 @@ library(ShortRead)
 # Parameters for the Pipeline
 
 ```{r define pipeline variables}
-virus_name <- "dengue_virus_type_1"
-virus_path <- "../data_processed/virus/reference/dengue_virus_type_1.fasta"
-fastq_path <- "../data_processed/vector/RNA_seq/"
-fastq_id_list <- c("SRR23079314","SRR8482202")
+virus_genome_path <- "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"
+vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR23079314","../data_processed/vector/aedes/albopictus/SRR8482202")
 
 k <- 6
 x <- 100
@@ -31,7 +29,7 @@ x <- 100
 Generation of the list of K-mers of interest based on the kmers present in all sequences of "dengue_virus_type_1" that are only appearing in the first x = 100 nulceotides of size k = 6
 
 ```{r Generate k-mers list}
-best_kmers_list <- gen_spe_first_obs_kmers(virus_path,k,x)
+best_kmers_list <- common_kmers(virus_genome_path,k,x)
 ```
 
 Generation of the information reguarding the position of every kmer in all sequences, the distances between the kmers and between the start position and the end position.
@@ -39,30 +37,31 @@ Generation of the information reguarding the position of every kmer in all seque
 Then using the get_stat_pos_df function and implementing the cleated dataframe inside of the v_kmer_pos_df function this will generate the statistical information about all kmers, their frequence, their repartition on the genomes the amount of times they appear on average.
 
 ```{r Get info reguarding specific k-mers reguarding the virus}
-v_kmer_pos_df <- gen_kmers_pos_df(virus_path,best_kmers_list,virus_name)
+v_kmer_pos_df <- kmers_pos_df(virus_genome_path,best_kmers_list)
 
-v_kmers_stats <- get_stats_kmers(v_kmer_pos_df)
+v_kmers_stats <- get_virus_stats_kmers(v_kmer_pos_df)
 ```
 
 Using the previoulsy genereted dataframe containing all information about the viruses we use the function get_kmer_freq to get the frequency of apparition of the kmers in the RNA sequences of the vectors(mosquitos) completing the dataframe with the background information.
 
 ```{r Get statistical information of k-mer reguarding the mosquito}
-complete_kmer_stats <- get_kmer_freq(v_kmers_stats, fastq_path, fastq_id_list)
+complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, fastq_path_list)
 ```
 
 Using all the statisctical values use them to generate a plot alowing us to represent the best Kmers and select the one that is desiered reguardin the scenario you need. The X axis will show us how well distributed the kmer is in the virus genome The Y axis will represents the ratio of how much times the kmer appears more on the virus genome then on average in the RNAseq values of the mosquito.
 
 ```{r Plot the data}
-complete_kmer_stats$x_value <- complete_kmer_stats$mean_count / complete_kmer_stats$mean_sd_virus
-
+complete_kmer_stats$x_value <- complete_kmer_stats$mean_count / mean(c(mean(complete_kmer_stats$mean_sd_log10_segments),complete_kmer_stats$mean_sd_log10_segments))
 complete_kmer_stats$y_value <- (log10(complete_kmer_stats$mean_freq_virus) - log10(complete_kmer_stats$freq_m))
 
 complete_kmer_stats <- complete_kmer_stats %>%
   filter(mean_count > 5)
 
 ggplot(complete_kmer_stats, aes(x = x_value, y = y_value, color = accession_id)) +
+  geom_line(aes(group = Kmer), color = "grey", linetype = "dashed") +
+  geom_point(shape = 16, size = 2) +
   geom_text(aes(label = paste0(Kmer, "\n", mean_count)), 
-            vjust = -0.5, size = 2) +
+            vjust = -0.5, size = 2, show.legend = FALSE) +
   labs(title = "frequency_virus / frequency_mos",
        x = "count per virus / sd segm virus",
        y = " log10(frequency virus) - log10(frequency mos)") +
