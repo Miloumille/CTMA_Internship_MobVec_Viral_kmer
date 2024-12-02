@@ -1,5 +1,3 @@
-
-
 ```{r}
 library(Gviz)
 library(Biostrings)
@@ -70,7 +68,6 @@ genome_length <- nchar(reference_genome)
 plotTracks(kmerTracks, from = 1, to = genome_length, margin = 10, sizes = rep(0.5, length(kmerTracks)), stacking = "dense")
 ```
 
-
 ```{r}
 library(ggplot2)
 library(Biostrings)
@@ -122,4 +119,52 @@ ggplot(kmer_data, aes(x = Position, y = Genome, color = Genome)) +
         legend.position = "none") +
   scale_color_brewer(palette = "Set3") +  # Assign a color palette to the genomes
   coord_cartesian(clip = 'off')
+```
+
+```{r}
+library(KmerEnrich)
+library(dplyr)
+virus_genome_path <- "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"
+vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR23079315")
+k <- 6
+x <- 100
+best_kmers_list <- common_kmers(virus_genome_path,k,x)
+v_kmer_pos_df <- kmers_pos_df(virus_genome_path,best_kmers_list)
+v_kmers_stats <- get_virus_stats_kmers(v_kmer_pos_df)
+complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, vector_genome_path)
+complete_kmer_stats$y_value <- (log10(complete_kmer_stats$mean_freq_virus) - log10(complete_kmer_stats$freq_m))
+
+
+library(ggplot2)
+find_kmer_positions <- function(fasta_path, kmer) {
+  genome <- readDNAStringSet(fasta_path)[[1]]  # Read the genome from FASTA file
+  kmer_pos <- matchPattern(kmer, genome)  # Find all positions of the k-mer
+  starts <- start(kmer_pos)  # Get the start positions of the matches
+  return(data.frame(Position = starts, Genome = basename(fasta_path)))  # Return positions with genome name
+}
+
+
+positions1 <- find_kmer_positions("../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta", "AGAGAG")
+positions1 <- transform(positions1, enrich = complete_kmer_stats[complete_kmer_stats$Kmer == "AGAGAG", "y_value"][[1]], Kmer = "AGAGAG")
+
+positions2 <- find_kmer_positions("../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta", "AACAGT")
+positions2 <- transform(positions2, enrich = complete_kmer_stats[complete_kmer_stats$Kmer == "AACAGT", "y_value"][[1]], Kmer = "AACAGT")
+
+
+# Append the two dataframes to combine them
+positions_combined <- rbind(positions1, positions2)
+positions_combined <- positions_combined[order(positions_combined$Position), ]
+
+
+positions_combined$next_position <- c(positions_combined$Position[-1], NA)
+ggplot(positions_combined, aes(x = Position, y = enrich)) +
+  geom_rect(aes(xmin = Position, xmax = next_position, ymin = 0, ymax = enrich), 
+            fill = "lightblue", color = "lightblue", size = 1) +
+  geom_point(aes(color = Kmer), size = 1) +
+  theme_minimal() +
+  labs(x = "Genome Position", y = "Kmer Enrichment") +
+  ggtitle("Kmer Enrichment on Genome")
+
+
+print()
 ```

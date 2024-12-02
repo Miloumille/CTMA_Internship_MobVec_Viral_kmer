@@ -1,12 +1,7 @@
 library(KmerEnrich)
-library(ShortRead)
-library(psych) 
 library(dplyr)
+library(psych)
 library(ggplot2)
-library(tidyr)
-
-
-
 virus_path <- "data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"
 fastq_path_list <- c("data_processed/vector/aedes/aegypty/SRR23079314",
                      "data_processed/vector/aedes/albopictus/SRR8482202",
@@ -45,7 +40,11 @@ data_for_icc <- df_selected %>%
 icc_result <- ICC(data_for_icc)
 print(icc_result)
 
-####    GRAPH     ####
+
+
+####    GRAPH ICC    ####
+
+
 
 #complete_kmer_stats <- complete_kmer_stats[, !colnames(complete_kmer_stats) %in% "mean_count"]
 
@@ -61,13 +60,13 @@ ggplot(complete_kmer_stats, aes(x = factor(Kmer), y = y_value, color = accession
     plot.title = element_text(size = 10)
   )
 
-####### Try Report generation 
+####### GENERATE REPORT  ########
 
-library(KmerEnrich)
 
-virus_folder <- "data_processed/virus/dengue/"
-vector_genome_path <- c("data_processed/vector/aedes/aegypty/SRR23079314")
-k <- c(5,6)
+
+virus_folder <- "data_processed/virus/japanese_encephalitis_virus/"
+vector_genome_path <- c("data_processed/vector/aedes/albopictus/SRR8482202")
+k <- c(5,6,7)
 x <- 500
 
 

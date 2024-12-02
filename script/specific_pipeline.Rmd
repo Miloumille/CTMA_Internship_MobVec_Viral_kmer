@@ -18,7 +18,7 @@ library(ShortRead)
 
 ```{r define pipeline variables}
 virus_genome_path <- "../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"
-vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR23079314","../data_processed/vector/aedes/albopictus/SRR8482202")
+vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR29420355")
 
 k <- 6
 x <- 100
@@ -45,7 +45,7 @@ v_kmers_stats <- get_virus_stats_kmers(v_kmer_pos_df)
 Using the previoulsy genereted dataframe containing all information about the viruses we use the function get_kmer_freq to get the frequency of apparition of the kmers in the RNA sequences of the vectors(mosquitos) completing the dataframe with the background information.
 
 ```{r Get statistical information of k-mer reguarding the mosquito}
-complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, fastq_path_list)
+complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, vector_genome_path)
 ```
 
 Using all the statisctical values use them to generate a plot alowing us to represent the best Kmers and select the one that is desiered reguardin the scenario you need. The X axis will show us how well distributed the kmer is in the virus genome The Y axis will represents the ratio of how much times the kmer appears more on the virus genome then on average in the RNAseq values of the mosquito.
@@ -69,4 +69,5 @@ ggplot(complete_kmer_stats, aes(x = x_value, y = y_value, color = accession_id))
   theme(axis.text.x = element_text(hjust = 1)) +
   expand_limits(x = max(complete_kmer_stats$x_value) * 1.05, 
                 y = max(complete_kmer_stats$y_value) * 1.1)
+
 ```
