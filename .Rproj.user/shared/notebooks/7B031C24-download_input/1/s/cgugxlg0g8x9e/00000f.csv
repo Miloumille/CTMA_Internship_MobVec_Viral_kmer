@@ -1,0 +1,5 @@
+"0","download_virus <- function(output_path,accession_id){"
+"0","  combined_sequences <- rentrez::entrez_fetch(db = ""nuccore"", id = accession_id, rettype = ""fasta"", retmode = ""text"")"
+"0","  write(combined_sequences, file = paste0(output_path,accession_id,"".fasta""))"
+"0","  print(paste0(accession_id,"" downloaded and stored at --> "",output_path))"
+"0","}"

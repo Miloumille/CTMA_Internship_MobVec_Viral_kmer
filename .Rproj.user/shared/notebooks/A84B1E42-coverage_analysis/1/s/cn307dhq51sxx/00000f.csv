@@ -1,0 +1,228 @@
+"0","library(GenomicAlignments)
+"
+"2","Loading required package: BiocGenerics
+"
+"2","
+Attaching package: ‘BiocGenerics’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind, colnames, dirname,
+    do.call, duplicated, eval, evalq, Filter, Find, get, grep, grepl, intersect,
+    is.unsorted, lapply, Map, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+    pmin.int, Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort, table,
+    tapply, union, unique, unsplit, which.max, which.min
+
+"
+"2","Loading required package: S4Vectors
+"
+"2","Loading required package: stats4
+"
+"2","
+Attaching package: ‘S4Vectors’
+
+"
+"2","The following object is masked from ‘package:utils’:
+
+    findMatches
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+"
+"2","Loading required package: IRanges
+"
+"2","Loading required package: GenomeInfoDb
+"
+"2","Warning: package ‘GenomeInfoDb’ was built under R version 4.3.3"
+"2","Loading required package: GenomicRanges
+"
+"2","Loading required package: SummarizedExperiment
+"
+"2","Loading required package: MatrixGenerics
+"
+"2","Loading required package: matrixStats
+"
+"2","Warning: package ‘matrixStats’ was built under R version 4.3.3"
+"2","
+Attaching package: ‘MatrixGenerics’
+
+"
+"2","The following objects are masked from ‘package:matrixStats’:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse, colCounts, colCummaxs,
+    colCummins, colCumprods, colCumsums, colDiffs, colIQRDiffs, colIQRs, colLogSumExps,
+    colMadDiffs, colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds, colSums2,
+    colTabulates, colVarDiffs, colVars, colWeightedMads, colWeightedMeans,
+    colWeightedMedians, colWeightedSds, colWeightedVars, rowAlls, rowAnyNAs, rowAnys,
+    rowAvgsPerColSet, rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps, rowMadDiffs, rowMads,
+    rowMaxs, rowMeans2, rowMedians, rowMins, rowOrderStats, rowProds, rowQuantiles,
+    rowRanges, rowRanks, rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs,
+    rowVars, rowWeightedMads, rowWeightedMeans, rowWeightedMedians, rowWeightedSds,
+    rowWeightedVars
+
+"
+"2","Loading required package: Biobase
+"
+"2","Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with 'browseVignettes()'. To cite
+    Bioconductor, see 'citation(""Biobase"")', and for packages 'citation(""pkgname"")'.
+
+"
+"2","
+Attaching package: ‘Biobase’
+
+"
+"2","The following object is masked from ‘package:MatrixGenerics’:
+
+    rowMedians
+
+"
+"2","The following objects are masked from ‘package:matrixStats’:
+
+    anyMissing, rowMedians
+
+"
+"2","Loading required package: Biostrings
+"
+"2","Warning: package ‘Biostrings’ was built under R version 4.3.3"
+"2","Loading required package: XVector
+"
+"2","
+Attaching package: ‘Biostrings’
+
+"
+"2","The following object is masked from ‘package:base’:
+
+    strsplit
+
+"
+"2","Loading required package: Rsamtools
+"
+"0","library(GenomicAlignments)"
+"0","library(rtracklayer)"
+"0","library(WriteXLS)"
+"2","Warning: package ‘WriteXLS’ was built under R version 4.3.3"
+"0","library(dplyr)"
+"2","
+Attaching package: ‘dplyr’
+
+"
+"2","The following objects are masked from ‘package:GenomicAlignments’:
+
+    first, last
+
+"
+"2","The following objects are masked from ‘package:Biostrings’:
+
+    collapse, intersect, setdiff, setequal, union
+
+"
+"2","The following object is masked from ‘package:XVector’:
+
+    slice
+
+"
+"2","The following object is masked from ‘package:Biobase’:
+
+    combine
+
+"
+"2","The following object is masked from ‘package:matrixStats’:
+
+    count
+
+"
+"2","The following objects are masked from ‘package:GenomicRanges’:
+
+    intersect, setdiff, union
+
+"
+"2","The following object is masked from ‘package:GenomeInfoDb’:
+
+    intersect
+
+"
+"2","The following objects are masked from ‘package:IRanges’:
+
+    collapse, desc, intersect, setdiff, slice, union
+
+"
+"2","The following objects are masked from ‘package:S4Vectors’:
+
+    first, intersect, rename, setdiff, setequal, union
+
+"
+"2","The following objects are masked from ‘package:BiocGenerics’:
+
+    combine, intersect, setdiff, union
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(ggplot2)"
+"0","library(GenomicRanges)"
+"0","library(Gviz)"
+"2","Loading required package: grid
+"
+"2","
+Attaching package: ‘grid’
+
+"
+"2","The following object is masked from ‘package:Biostrings’:
+
+    pattern
+
+"
+"2","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"0","library(ShortRead)"
+"2","Loading required package: BiocParallel
+"
+"2","
+Attaching package: 'ShortRead'
+
+"
+"2","The following objects are masked from 'package:Gviz':
+
+    chromosome, position
+
+"
+"2","The following object is masked from 'package:dplyr':
+
+    id
+
+"
+"0","library(Biostrings)"
+"0","library(readxl)"
+"0","options(ucscChromosomeNames = FALSE)"

@@ -1,0 +1,8 @@
+"0","output_path <- ""../data_processed/virus/dengue/dengue_type_2/"""
+"0",""
+"0","accession_id <- ""MZ130529.1"""
+"0","download_virus(output_path ,accession_id)"
+"1","[1]"
+"1"," ""MZ130529.1 downloaded and stored at --> ../data_processed/virus/dengue/dengue_type_2/"""
+"1","
+"

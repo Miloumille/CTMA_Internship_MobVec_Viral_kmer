@@ -1,0 +1,3 @@
+"0","v_kmer_pos_df <- gen_kmers_pos_df(virus_path,best_kmers_list,virus_name)"
+"0",""
+"0","v_kmers_stats <- get_stats_kmers(v_kmer_pos_df)"

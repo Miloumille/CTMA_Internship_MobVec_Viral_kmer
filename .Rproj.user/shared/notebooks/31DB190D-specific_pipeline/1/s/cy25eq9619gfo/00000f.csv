@@ -1,0 +1,7 @@
+"0","virus_name <- ""dengue_virus_type_1"""
+"0","virus_path <- ""../data_processed/virus/reference/dengue_virus_type_1.fasta"""
+"0","fastq_path <- ""../data_processed/vector/RNA_seq/"""
+"0","fastq_id_list <- c(""SRR23079314"",""SRR8482202"")"
+"0",""
+"0","k <- 6"
+"0","x <- 100"

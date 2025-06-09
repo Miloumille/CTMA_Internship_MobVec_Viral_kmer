@@ -1,0 +1,233 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r, attr.output="hidden"}
+library(GenomicAlignments)
+library(rtracklayer)
+library(WriteXLS)
+library(dplyr)
+library(ggplot2)
+library(GenomicRanges)
+library(Gviz)
+library(ShortRead)
+library(Biostrings)
+library(readxl)
+options(ucscChromosomeNames=FALSE)
+```
+
+
+```{r Params}
+reference <- "data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta"
+fasta_files <- sprintf("barcode%02d", 1:16)
+sample_file <- "5"
+file_name <- "_virus"
+```
+
+```{r Shortening fastq}
+fastq_folder <- "../data_sequencing/4_shorted_150//raw/"
+
+# Get all .fastq files in the folder
+fastq_files <- list.files(path = fastq_folder, pattern = "\\.fastq$", full.names = TRUE)
+
+# Number of bases to trim
+trim_length <- 150
+
+
+for (file in fastq_files) {
+  message("🔄 Processing: ", file)
+  
+  # Read FASTQ file
+  fq <- readFastq(file)
+  
+  # Extract parts
+  seqs <- sread(fq)
+  quals <- quality(fq)
+  ids <- id(fq)
+  
+  # Determine which reads to trim
+  is_long <- width(seqs) > trim_length
+  is_short <- !is_long
+  
+  # Trim long reads
+  fq_trimmed <- fq[is_long]
+  fq_trimmed <- narrow(fq_trimmed, start = trim_length + 1, end = width(fq_trimmed))
+  
+  # Keep short reads as-is
+  fq_short <- fq[is_short]
+  
+  # Combine both
+  fq_final <- append(fq_trimmed, fq_short)
+
+  # Write to new FASTQ file
+  out_file <- file.path(fastq_folder,
+                        paste0(tools::file_path_sans_ext(basename(file)), "_short.fastq"))
+  writeFastq(fq_final, out_file, compress = FALSE)
+  
+  message("✅ Saved: ", out_file)
+}
+
+message("🎉 All files processed.")
+```
+
+```{r Original coverage Virus}
+for (fasta_file in fasta_files){
+  myarg <- paste0("run --rm -v ./../:/docker_data --rm -v --cpus=8 nanozoo/minimap2:2.28--9e3bd01 sh -c 'minimap2 -ax map-ont /docker_data/",reference," /docker_data/data_sequencing/",sample_file,"/raw/",fasta_file,".fastq.gz > /docker_data/data_sequencing/",sample_file,"/SAM/aligned_",fasta_file,file_name,".sam'")   
+system2(command='docker',args=myarg)
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b /docker_data/data_sequencing/",sample_file,"/SAM/aligned_",fasta_file,file_name,".sam -o /docker_data/data_sequencing/",sample_file,"/BAM/",fasta_file,file_name,".bam'")
+system2(command='docker',args=myarg) 
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b -F 4  /docker_data/data_sequencing/",sample_file,"/BAM/",fasta_file,file_name,".bam -o /docker_data/data_sequencing/",sample_file,"/mapped_BAM/",fasta_file,"_mapped",file_name,".bam'")
+system2(command='docker',args=myarg)
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools sort"," /docker_data/data_sequencing/",sample_file,"/mapped_BAM/",fasta_file,"_mapped",file_name,".bam"," -o /docker_data/data_sequencing/",sample_file,"/mapped_sorted_BAM/",fasta_file,"_mapped_sorted",file_name,".bam'")
+system2(command='docker',args=myarg)
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools index"," /docker_data/data_sequencing/",sample_file,"/mapped_sorted_BAM/",fasta_file,"_mapped_sorted",file_name,".bam'")
+system2(command='docker',args=myarg)
+
+file.remove(paste0("../data_sequencing/",sample_file,"/SAM/aligned_",fasta_file,file_name,".sam"))
+}
+```
+
+
+```{r Plot coverage}
+
+#3
+#names <- c("SMART-9N","SMART-3N6","Mix Kmer-AGAGAA-GGAAAG - 3R","Mix Kmer-GGAAAGA-AAGAGAA","SMART-9N","SMART-3N6","Mix Kmer-AGAGAA-GGAAAG-3R","Mix Kmer-GGAAAGA-AAGAGAA","SMART-9N","SMART-3N6","Mix Kmer-AGAGAA-GGAAAG-3R","Mix Kmer-GGAAAGA-AAGAGAA")
+#4
+#names <- c("SMART-9N","SMART-3N6","Kmer-TGGAA","Kmer-GGAAA","Kmer-TGGAAG","Kmer-GGAAAA","Kmer-GGAAAGA","Kmer-AAGAGAA","Primer_START","Kmer -GGAAAGA-AAGAGAA-START","Kmer-AAAGA","Kmer-GGAAAG","Kmer-CAGGAAA","Mix Kmer-AGAGAA-GGAAAG -3R","Mix Kmer-GGAAAGA-AAGAGAA","3R seul")
+#5
+names <- c("D2V-STD1_SMART-9N","D2V-STD1_SMART-3N6","D2V-STD1_Mix3","D2V-STD1_Mix4","D2V-STD2_SMART-9N","D2V-STD2_SMART-3N6","D2V-STD2_Mix3","D2V-STD2_Mix4","D2V-STD3_SMART-9N","D2V-STD3_SMART-3N6","D2V-STD3_Mix3","D2V-STD3_Mix4","INSA-A-SMART-9N","INSA-A-SMART-3N6","INSA-A-Mix3","INSA-A-Mix4")
+
+fasta_files <- sprintf("barcode%02d", 1:16)
+
+for (i in 1:length(fasta_files)){
+  bam <- paste0("data_sequencing/",sample_file,"/mapped_sorted_BAM/",fasta_files[i],"_mapped_sorted",file_name,".bam")
+
+  ref_genome <- readDNAStringSet(reference)
+  alignments <- readGAlignments(bam)
+  name <- seqnames(alignments)@values
+  coverage_values <- as.numeric(coverage(alignments)[[name]])
+  positions <- seq_along(coverage_values)
+  
+  virus_ranges <- GRanges(
+    seqnames = name,
+    ranges = IRanges(start = positions, width = 10),
+    score = coverage_values
+  )
+  
+  coverage_track <- DataTrack(
+  range = virus_ranges,          # your data
+  type = "histogram",           # type of track
+  name = "Coverage",            # track title
+  ylab = "Read Depth",          # y-axis label
+  col.histogram = "steelblue"    # color
+)
+  
+  displayPars(coverage_track) <- list(
+  background.panel = "white",   # background of the plotting area (y-axis area)
+  background.title = "white",   # background of the track title
+  col.axis = "black",           # axis lines and tick marks
+  col.title = "black",          # y-axis title text
+  col.frame = NA                # remove border (optional)
+)
+  
+  axisTrack <- GenomeAxisTrack()
+  pdf(paste0("data_sequencing/",sample_file,"/cov_plot/",fasta_files[i],file_name,".pdf"),width=10,height = 3)
+  
+  plotTracks(
+  list(coverage_track, axisTrack),
+  from = 1,
+  to = length(ref_genome[[1]]),
+  col.axis = "black",
+  main = paste0("Read Coverage - Aedes Albopictus - ", names[i]),
+  cex.main = 1.2
+)
+  
+  dev.off(dev.list()["pdf"])
+}
+
+
+fastq_file <- "data_sequencing/5/raw/barcode12.fastq.gz"
+fastq_data <- readFastq(fastq_file)
+length(fastq_data)
+
+
+```
+
+
+```{r}
+for (i in 1:length(fasta_files)){
+  
+  # BAM -> fastq
+  myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 biocontainers/bedtools:v2.27.1dfsg-4-deb_cv1 sh -c 'bedtools bamtofastq -i ","/docker_data/data_sequencing/",sample_file,"/mapped_BAM/",fasta_files[i],"_mapped_virus.bam -fq /docker_data/data_sequencing/",sample_file,"/fastq_filtered/",fasta_files[i],"_virus.fastq'")
+  system2(command='docker',args=myarg)
+  
+  # fastq -> QC report
+  myarg <- paste0("run --rm -v ./../:/docker_data --cpus=8 nanozoo/nanoplot:latest sh -c 'NanoPlot --fastq /docker_data/data_sequencing/",sample_file,"/fastq_filtered/",fasta_files[i],"_virus.fastq -o /docker_data/data_sequencing/",sample_file,"/QC_report/",fasta_files[i],"_virus_qc_report
+  '")
+  system2(command='docker',args=myarg)
+}
+```
+
+
+```{r, FlagStats}
+
+file_name <- "_virus"
+for (fasta_file in fasta_files){
+  myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools flagstat"," /docker_data/data_sequencing/",sample_file,"/BAM/",fasta_file,file_name,".bam > /docker_data/data_sequencing/",sample_file,"/BAM/",fasta_file,file_name,".txt'")
+  system2(command='docker',args=myarg)
+}
+
+
+```
+
+
+```{r Genome Correction}
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 biocontainers/bcftools:v1.9-1-deb_cv1 sh -c 'bcftools mpileup -f /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/2/mapped_sorted_BAM/barcode09_mapped_sorted.bam | bcftools call -mv -Ov -o /docker_data/data_sequencing/2/VCF/barcode_09.vcf'")
+system2(command='docker',args=myarg)
+
+bgzip_command <- "bgzip /Users/emilevancauwenberghe/Documents/University/ULB/Memoire/Memoire_CTMA/CTMA_Internship_MobVec_Viral_KMERS/data_sequencing/2/VCF/barcode_09.vcf"
+system2("sh", args = c("-c", bgzip_command))
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 biocontainers/bcftools:v1.9-1-deb_cv1 sh -c 'bcftools index /docker_data/data_sequencing/2/VCF/barcode_09.vcf.gz'")
+system2(command='docker',args=myarg)
+
+myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 biocontainers/bcftools:v1.9-1-deb_cv1 sh -c 'bcftools consensus -f /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta -o /docker_data/data_sequencing/2/VCF/barcode_09_corrected.fasta /docker_data/data_sequencing/2/VCF/barcode_09.vcf.gz'")
+system2(command='docker',args=myarg)
+
+```
+
+
+```{r}
+library(R.utils)
+# Function to merge all fastq.gz files into one
+merge_all_fastq_files <- function(folder_path) {
+  input_files <- list.files(folder_path, pattern = ".*fastq.gz$", full.names = TRUE)
+  print(input_files)
+  output_file <- file.path(folder_path, "barcode17.fastq.gz")
+  
+  if (length(input_files) > 0) {
+    cat("Merging all fastq.gz files into:", output_file, "\n")
+    
+    # Use system command to concatenate files efficiently
+    cmd <- paste("cat", paste(input_files, collapse = " "), ">", output_file)
+    system(cmd)
+  } else {
+    cat("No fastq.gz files found in:", folder_path, "\n")
+  }
+}
+
+# Example usage
+merge_all_fastq_files("../data_sequencing/5/raw/barcode17")
+
+
+```
+
+
+
+
+

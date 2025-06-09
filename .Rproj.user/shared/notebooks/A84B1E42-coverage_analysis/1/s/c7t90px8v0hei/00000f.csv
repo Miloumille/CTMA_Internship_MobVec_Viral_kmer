@@ -1,0 +1,542 @@
+"0","for (fasta_file in fasta_files){"
+"0","  myarg <- paste0(""run --rm -v ./../:/docker_data --rm -v --cpus=8 nanozoo/minimap2:2.28--9e3bd01 sh -c 'minimap2 -ax map-ont /docker_data/"",reference,"" /docker_data/data_sequencing/"",sample_file,""/raw/"",fasta_file,"".fastq > /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam'"")   "
+"0","system2(command='docker',args=myarg)"
+"0",""
+"0","myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam -o /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,file_name,"".bam'"")"
+"0","system2(command='docker',args=myarg) "
+"0",""
+"0","myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b -F 4  /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,file_name,"".bam -o /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped"",file_name,"".bam'"")"
+"0","system2(command='docker',args=myarg)"
+"0",""
+"0","myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools sort"","" /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped"",file_name,"".bam"","" -o /docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted"",file_name,"".bam'"")"
+"0","system2(command='docker',args=myarg)"
+"0",""
+"0","myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools index"","" /docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted"",file_name,"".bam'"")"
+"0","system2(command='docker',args=myarg)"
+"0",""
+"0","file.remove(paste0(""../data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam""))"
+"0","}"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.021*1.60] collected minimizers
+"
+"2","[M::mm_idx_gen::0.025*1.52] sorted minimizers
+"
+"2","[M::main::0.025*1.51] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.026*1.50] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.026*1.50] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::22.389*1.71] mapped 428462 sequences
+"
+"2","[M::worker_pipeline::34.792*1.22] mapped 420899 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode17.fastq
+[M::main] Real time: 34.826 sec; CPU: 42.506 sec; Peak RSS: 2.003 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.021*1.41] collected minimizers
+"
+"2","[M::mm_idx_gen::0.028*1.35] sorted minimizers
+"
+"2","[M::main::0.028*1.34] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.029*1.34] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.029*1.33] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::24.892*1.61] mapped 772592 sequences
+"
+"2","[M::worker_pipeline::35.440*1.24] mapped 598256 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode18.fastq
+[M::main] Real time: 35.445 sec; CPU: 44.045 sec; Peak RSS: 1.895 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.027*1.31] collected minimizers
+"
+"2","[M::mm_idx_gen::0.035*1.34] sorted minimizers
+"
+"2","[M::main::0.037*1.32] loaded/built the index for 1 target sequence(s)
+[M::mm_mapopt_update::0.038*1.31] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.038*1.31] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::20.488*1.85] mapped 413686 sequences
+"
+"2","[M::worker_pipeline::32.838*1.30] mapped 403468 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode19.fastq
+[M::main] Real time: 32.900 sec; CPU: 42.598 sec; Peak RSS: 1.986 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.017*1.66] collected minimizers
+"
+"2","[M::mm_idx_gen::0.022*1.50] sorted minimizers
+"
+"2","[M::main::0.022*1.49] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.023*1.48] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.023*1.47] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::20.938*1.41] mapped 445601 sequences
+"
+"2","[M::worker_pipeline::26.758*1.19] mapped 196758 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode20.fastq
+[M::main] Real time: 26.791 sec; CPU: 31.780 sec; Peak RSS: 1.462 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.026*1.32] collected minimizers
+"
+"2","[M::mm_idx_gen::0.031*1.24] sorted minimizers
+"
+"2","[M::main::0.031*1.24] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.032*1.23] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.032*1.23] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::20.660*1.88] mapped 477755 sequences
+"
+"2","[M::worker_pipeline::33.890*1.39] mapped 477518 sequences
+"
+"2","[M::worker_pipeline::36.681*1.31] mapped 104479 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode21.fastq
+[M::main] Real time: 36.684 sec; CPU: 48.061 sec; Peak RSS: 2.040 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.035*1.11] collected minimizers
+"
+"2","[M::mm_idx_gen::0.039*1.09] sorted minimizers
+"
+"2","[M::main::0.041*1.09] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.042*1.09] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+[M::mm_idx_stat::0.043*1.09] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::22.394*1.92] mapped 384342 sequences
+"
+"2","[M::worker_pipeline::35.441*1.46] mapped 384182 sequences
+"
+"2","[M::worker_pipeline::38.604*1.37] mapped 100586 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode22.fastq
+[M::main] Real time: 38.607 sec; CPU: 52.717 sec; Peak RSS: 2.003 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.022*1.77] collected minimizers
+"
+"2","[M::mm_idx_gen::0.026*1.68] sorted minimizers
+"
+"2","[M::main::0.026*1.67] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.027*1.65] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.027*1.65] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::19.111*1.86] mapped 377221 sequences
+"
+"2","[M::worker_pipeline::32.112*1.38] mapped 378000 sequences
+"
+"2","[M::worker_pipeline::35.149*1.29] mapped 98648 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode23.fastq
+[M::main] Real time: 35.152 sec; CPU: 45.329 sec; Peak RSS: 2.002 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.025*1.36] collected minimizers
+"
+"2","[M::mm_idx_gen::0.034*1.22] sorted minimizers
+"
+"2","[M::main::0.034*1.21] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.035*1.21] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.035*1.21] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::19.699*1.84] mapped 416032 sequences
+"
+"2","[M::worker_pipeline::34.012*1.67] mapped 417940 sequences
+"
+"2","[M::worker_pipeline::48.402*1.59] mapped 413940 sequences
+"
+"2","[M::worker_pipeline::62.179*1.49] mapped 419965 sequences
+"
+"2","[M::worker_pipeline::70.634*1.35] mapped 288493 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode24.fastq
+[M::main] Real time: 70.636 sec; CPU: 95.324 sec; Peak RSS: 2.029 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.035*1.13] collected minimizers
+"
+"2","[M::mm_idx_gen::0.040*1.11] sorted minimizers
+"
+"2","[M::main::0.040*1.11] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.041*1.11] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.041*1.11] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::21.391*1.93] mapped 853540 sequences
+"
+"2","[M::worker_pipeline::36.690*1.77] mapped 855762 sequences
+"
+"2","[M::worker_pipeline::51.922*1.70] mapped 853049 sequences
+"
+"2","[M::worker_pipeline::67.115*1.66] mapped 853585 sequences
+"
+"2","[M::worker_pipeline::83.923*1.59] mapped 855913 sequences
+"
+"2","[M::worker_pipeline::96.331*1.44] mapped 767165 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode25.fastq
+[M::main] Real time: 96.394 sec; CPU: 138.310 sec; Peak RSS: 2.191 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.025*1.40] collected minimizers
+"
+"2","[M::mm_idx_gen::0.029*1.34] sorted minimizers
+"
+"2","[M::main::0.029*1.33] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.030*1.33] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.030*1.33] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::21.674*1.90] mapped 778833 sequences
+"
+"2","[M::worker_pipeline::36.146*1.75] mapped 781690 sequences
+"
+"2","[M::worker_pipeline::51.422*1.67] mapped 778517 sequences
+"
+"2","[M::worker_pipeline::66.413*1.63] mapped 780119 sequences
+"
+"2","[M::worker_pipeline::80.341*1.49] mapped 780442 sequences
+"
+"2","[M::worker_pipeline::85.163*1.43] mapped 278443 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode26.fastq
+[M::main] Real time: 85.200 sec; CPU: 121.426 sec; Peak RSS: 2.165 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.031*1.17] collected minimizers
+"
+"2","[M::mm_idx_gen::0.035*1.17] sorted minimizers
+"
+"2","[M::main::0.036*1.17] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.036*1.16] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.036*1.16] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::19.784*1.81] mapped 372798 sequences
+"
+"2","[M::worker_pipeline::33.885*1.65] mapped 376835 sequences
+"
+"2","[M::worker_pipeline::48.296*1.59] mapped 375752 sequences
+"
+"2","[M::worker_pipeline::62.372*1.55] mapped 371572 sequences
+"
+"2","[M::worker_pipeline::76.519*1.52] mapped 373745 sequences
+"
+"2","[M::worker_pipeline::91.006*1.50] mapped 379229 sequences
+"
+"2","[M::worker_pipeline::104.358*1.38] mapped 371297 sequences
+"
+"2","[M::worker_pipeline::106.265*1.36] mapped 58050 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode27.fastq
+[M::main] Real time: 106.295 sec; CPU: 144.356 sec; Peak RSS: 2.028 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.030*1.27] collected minimizers
+"
+"2","[M::mm_idx_gen::0.035*1.24] sorted minimizers
+"
+"2","[M::main::0.035*1.23] loaded/built the index for 1 target sequence(s)
+[M::mm_mapopt_update::0.036*1.23] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.036*1.23] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::24.041*1.90] mapped 384294 sequences
+"
+"2","[M::worker_pipeline::41.784*1.61] mapped 389545 sequences
+"
+"2","[M::worker_pipeline::54.231*1.33] mapped 348312 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode28.fastq
+[M::main] Real time: 54.234 sec; CPU: 72.401 sec; Peak RSS: 2.006 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.025*1.36] collected minimizers
+"
+"2","[M::mm_idx_gen::0.030*1.30] sorted minimizers
+"
+"2","[M::main::0.030*1.30] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.031*1.29] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.031*1.29] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::20.841*1.86] mapped 431427 sequences
+"
+"2","[M::worker_pipeline::37.386*1.65] mapped 434901 sequences
+"
+"2","[M::worker_pipeline::53.903*1.51] mapped 434206 sequences
+"
+"2","[M::worker_pipeline::62.934*1.34] mapped 292636 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode29.fastq
+[M::main] Real time: 62.990 sec; CPU: 84.553 sec; Peak RSS: 2.031 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.019*1.63] collected minimizers
+"
+"2","[M::mm_idx_gen::0.031*1.50] sorted minimizers
+"
+"2","[M::main::0.033*1.47] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.033*1.46] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.034*1.46] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::22.433*1.91] mapped 489278 sequences
+"
+"2","[M::worker_pipeline::38.376*1.73] mapped 492621 sequences
+"
+"2","[M::worker_pipeline::51.841*1.40] mapped 488402 sequences
+"
+"2","[M::worker_pipeline::52.353*1.39] mapped 19758 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode30.fastq
+[M::main] Real time: 52.388 sec; CPU: 72.574 sec; Peak RSS: 2.049 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.036*1.51] collected minimizers
+"
+"2","[M::mm_idx_gen::0.041*1.47] sorted minimizers
+"
+"2","[M::main::0.041*1.46] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.042*1.46] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.042*1.46] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::20.915*1.81] mapped 419958 sequences
+"
+"2","[M::worker_pipeline::35.140*1.58] mapped 424316 sequences
+"
+"2","[M::worker_pipeline::45.744*1.30] mapped 341364 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode31.fastq
+[M::main] Real time: 45.747 sec; CPU: 59.343 sec; Peak RSS: 2.018 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.023*1.46] collected minimizers
+"
+"2","[M::mm_idx_gen::0.028*1.43] sorted minimizers
+"
+"2","[M::main::0.028*1.42] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.029*1.41] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.029*1.41] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::19.757*1.90] mapped 463227 sequences
+"
+"2","[M::worker_pipeline::33.434*1.47] mapped 464917 sequences
+"
+"2","[M::worker_pipeline::39.027*1.31] mapped 199412 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode32.fastq
+[M::main] Real time: 39.030 sec; CPU: 51.282 sec; Peak RSS: 2.031 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"

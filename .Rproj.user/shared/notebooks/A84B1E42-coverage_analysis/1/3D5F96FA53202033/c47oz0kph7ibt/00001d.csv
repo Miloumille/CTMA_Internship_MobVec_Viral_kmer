@@ -1,0 +1,5 @@
+"0","  coverage_values <- coverage(alignments)[[name]]
+"
+"2","Error in normalizeDoubleBracketSubscript(i, x, exact = exact, allow.NA = TRUE,  : 
+  attempt to extract more than one element
+"

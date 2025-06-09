@@ -1,0 +1,118 @@
+"0","library(Gviz)
+"
+"2","Loading required package: S4Vectors
+"
+"2","Loading required package: stats4
+"
+"2","Loading required package: BiocGenerics
+"
+"2","
+Attaching package: ‘BiocGenerics’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    combine, intersect, setdiff, union
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind, colnames, dirname, do.call,
+    duplicated, eval, evalq, Filter, Find, get, grep, grepl, intersect, is.unsorted, lapply, Map,
+    mapply, match, mget, order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank, rbind,
+    Reduce, rownames, sapply, setdiff, sort, table, tapply, union, unique, unsplit, which.max,
+    which.min
+
+"
+"2","
+Attaching package: ‘S4Vectors’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    first, rename
+
+"
+"2","The following object is masked from ‘package:utils’:
+
+    findMatches
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+"
+"2","Loading required package: IRanges
+"
+"2","
+Attaching package: ‘IRanges’
+
+"
+"2","The following objects are masked from ‘package:psych’:
+
+    distance, reflect
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    collapse, desc, slice
+
+"
+"2","Loading required package: GenomicRanges
+"
+"2","Loading required package: GenomeInfoDb
+"
+"2","Warning: package ‘GenomeInfoDb’ was built under R version 4.3.3"
+"2","Loading required package: grid
+"
+"2","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"0","library(Gviz)"
+"0","library(Biostrings)"
+"2","Warning: package 'Biostrings' was built under R version 4.3.3"
+"2","Loading required package: XVector
+"
+"2","
+Attaching package: 'Biostrings'
+
+"
+"2","The following object is masked from 'package:grid':
+
+    pattern
+
+"
+"2","The following object is masked from 'package:base':
+
+    strsplit
+
+"
+"0","# Define the vector of paths to the FASTA files"
+"0","fasta_paths <- c("
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"", "
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_1/NC_001477.1.fasta"","
+"0","  ""../data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta"", "
+"0","  ""../data_processed/virus/dengue/dengue_type_3/NC_001475.2.fasta"", "
+"0","  ""../data_processed/virus/dengue/dengue_type_4/NC_002640.1.fasta"""
+"0",")"

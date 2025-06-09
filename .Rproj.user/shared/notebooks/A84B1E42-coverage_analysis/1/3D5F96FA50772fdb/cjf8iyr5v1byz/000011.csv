@@ -1,0 +1,89 @@
+"0","for (fasta_file in fasta_files){
+  myarg <- paste0(""run --rm -v ./../:/docker_data --rm -v --cpus=8 nanozoo/minimap2:2.28--9e3bd01 sh -c 'minimap2 -ax map-ont /docker_data/"",reference,"" /docker_data/data_sequencing/"",sample_file,""/raw/"",fasta_file,"".fastq > /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam'"")   
+system2(command='docker',args=myarg)
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam -o /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,file_name,"".bam'"")
+system2(command='docker',args=myarg) 
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b -F 4  /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,file_name,"".bam -o /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped"",file_name,"".bam'"")
+system2(command='docker',args=myarg)
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools sort"","" /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped"",file_name,"".bam"","" -o /docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted"",file_name,"".bam'"")
+system2(command='docker',args=myarg)
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=8 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools index"","" /docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted"",file_name,"".bam'"")
+system2(command='docker',args=myarg)
+
+file.remove(paste0(""../data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,file_name,"".sam""))
+}
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.025*1.33] collected minimizers
+"
+"2","[M::mm_idx_gen::0.028*1.32] sorted minimizers
+"
+"2","[M::main::0.028*1.32] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.029*1.31] mid_occ = 10
+"
+"2","[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.029*1.31] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::24.956*1.58] mapped 428462 sequences
+"
+"2","[M::worker_pipeline::40.282*1.10] mapped 420899 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode17.fastq
+[M::main] Real time: 40.346 sec; CPU: 44.225 sec; Peak RSS: 2.004 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.019*1.79] collected minimizers
+"
+"2","[M::mm_idx_gen::0.024*1.65] sorted minimizers
+"
+"2","[M::main::0.024*1.64] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.025*1.63] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.025*1.62] distinct minimizers: 2018 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.314; total length: 10723
+"
+"2","[M::worker_pipeline::25.713*1.39] mapped 772592 sequences
+"
+"2","[M::worker_pipeline::37.524*1.06] mapped 598256 sequences
+"
+"2","[M::main] Version: 2.28-r1209
+[M::main] CMD: minimap2 -ax map-ont /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta /docker_data/data_sequencing/3/raw/barcode18.fastq
+[M::main] Real time: 37.531 sec; CPU: 39.779 sec; Peak RSS: 1.895 GB
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[E::bgzf_flush] File write failed (wrong size)
+samtools view: writing to ""/docker_data/data_sequencing/3/BAM/barcode18_virus.bam"" failed: No space left on device
+samtools view: error reading file ""/docker_data/data_sequencing/3/SAM/aligned_barcode18_virus.sam"": No space left on device
+"
+"2","samtools view: error closing ""/docker_data/data_sequencing/3/BAM/barcode18_virus.bam"": -1
+"
+"2","time=""2025-03-11T16:39:25-04:00"" level=error msg=""Error waiting for container: write /var/lib/desktop-containerd/daemon/io.containerd.metadata.v1.bolt/meta.db: input/output error: unknown""
+"
+"2","docker: Error response from daemon: failed to get config descriptor: rpc error: code = Unknown desc = blob sha256:86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5 expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: input/output error.
+See 'docker run --help'.
+"
+"2","docker: Error response from daemon: failed to get config descriptor: rpc error: code = Unknown desc = blob sha256:86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5 expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: input/output error.
+See 'docker run --help'.
+"
+"2","docker: Error response from daemon: failed to get config descriptor: rpc error: code = Unknown desc = blob sha256:86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5 expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: input/output error.
+See 'docker run --help'.
+"

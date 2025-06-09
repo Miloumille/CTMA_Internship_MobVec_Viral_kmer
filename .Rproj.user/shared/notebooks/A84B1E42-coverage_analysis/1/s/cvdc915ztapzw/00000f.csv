@@ -1,0 +1,43 @@
+"0","for (fasta_file in fasta_files){
+  myarg <- paste0(""run --rm -v ./../:/docker_data --rm -v --cpus=4 nanozoo/minimap2:2.28--9e3bd01 sh -c 'minimap2 -ax map-ont /docker_data/"",reference,"" /docker_data/data_sequencing/"",sample_file,""/raw/"",fasta_file,"".fastq > /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,""_virus.sam'"")   
+system2(command='docker',args=myarg)
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=4 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b /docker_data/data_sequencing/"",sample_file,""/SAM/aligned_"",fasta_file,""_virus.sam -o /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,""_virus.bam'"")
+system2(command='docker',args=myarg) 
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=4 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools view -b -F 4  /docker_data/data_sequencing/"",sample_file,""/BAM/"",fasta_file,""_virus.bam -o /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped_virus.bam'"")
+system2(command='docker',args=myarg)
+
+myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=4 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools sort"","" /docker_data/data_sequencing/"",sample_file,""/mapped_BAM/"",fasta_file,""_mapped_virus.bam"","" -o /docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted_virus.bam'"")
+system2(command='docker',args=myarg)
+
+#myarg <- paste0(""run --rm -v ./../:/docker_data --cpus=4 nanozoo/samtools:1.20--d1e21ae sh -c 'samtools index"","" #/docker_data/data_sequencing/"",sample_file,""/mapped_sorted_BAM/"",fasta_file,""_mapped_sorted_virus.bam'"")
+#system2(command='docker',args=myarg)
+}
+"
+"2","WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+"
+"2","[M::mm_idx_gen::0.014*1.52] collected minimizers
+"
+"2","[M::mm_idx_gen::0.016*1.41] sorted minimizers
+"
+"2","[M::main::0.017*1.40] loaded/built the index for 1 target sequence(s)
+"
+"2","[M::mm_mapopt_update::0.017*1.39] mid_occ = 10
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+"
+"2","[M::mm_idx_stat::0.017*1.39] distinct minimizers: 1990 (100.00% are singletons); average occurrences: 1.000; average spacing: 5.385; total length: 10717
+"
+"2","[ERROR] failed to write the results: No space left on device
+"
+"2","time=""2025-02-13T14:08:20-05:00"" level=error msg=""Error waiting for container: write /var/lib/desktop-containerd/daemon/io.containerd.metadata.v1.bolt/meta.db: input/output error: unknown""
+"
+"2","docker: Error response from daemon: failed to get config descriptor: rpc error: code = Unknown desc = blob sha256:86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5 expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: input/output error.
+See 'docker run --help'.
+"
+"2","docker: Error response from daemon: failed to get config descriptor: rpc error: code = Unknown desc = blob sha256:86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5 expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/86df9510ac30cf642a11da703beae049a09eb04fe4b11c32c005b4022f8579f5: input/output error.
+See 'docker run --help'.
+"
+"2","docker: Get ""http://%2FUsers%2Femilevancauwenberghe%2F.docker%2Frun%2Fdocker.sock/_ping"": context canceled.
+See 'docker run --help'.
+"
