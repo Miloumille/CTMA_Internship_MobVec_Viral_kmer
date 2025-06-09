@@ -1,6 +1,6 @@
 data_processed/virus/*
 !data_processed/virus/.gitkeep
-data_processed/vector/aedes/*
+data_processed/vector/
 !data_processed/vector/aedes/.gitkeep
 data_processed/ref_vector/*
 data_sequencing/*
