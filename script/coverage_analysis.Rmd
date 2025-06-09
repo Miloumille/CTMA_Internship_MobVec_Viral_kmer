@@ -100,9 +100,7 @@ file.remove(paste0("../data_sequencing/",sample_file,"/SAM/aligned_",fasta_file,
 #4
 #names <- c("SMART-9N","SMART-3N6","Kmer-TGGAA","Kmer-GGAAA","Kmer-TGGAAG","Kmer-GGAAAA","Kmer-GGAAAGA","Kmer-AAGAGAA","Primer_START","Kmer -GGAAAGA-AAGAGAA-START","Kmer-AAAGA","Kmer-GGAAAG","Kmer-CAGGAAA","Mix Kmer-AGAGAA-GGAAAG -3R","Mix Kmer-GGAAAGA-AAGAGAA","3R seul")
 #5
-names <- c("D2V-STD1_SMART-9N","D2V-STD1_SMART-3N6","D2V-STD1_Mix3","D2V-STD1_Mix4","D2V-STD2_SMART-9N","D2V-STD2_SMART-3N6","D2V-STD2_Mix3","D2V-STD2_Mix4","D2V-STD3_SMART-9N","D2V-STD3_SMART-3N6","D2V-STD3_Mix3","D2V-STD3_Mix4","INSA-A-SMART-9N","INSA-A-SMART-3N6","INSA-A-Mix3","INSA-A-Mix4")
-
-fasta_files <- sprintf("barcode%02d", 1:16)
+#names <- c("D2V-STD1_SMART-9N","D2V-STD1_SMART-3N6","D2V-STD1_Mix3","D2V-STD1_Mix4","D2V-STD2_SMART-9N","D2V-STD2_SMART-3N6","D2V-STD2_Mix3","D2V-STD2_Mix4","D2V-STD3_SMART-9N","D2V-STD3_SMART-3N6","D2V-STD3_Mix3","D2V-STD3_Mix4","INSA-A-SMART-9N","INSA-A-SMART-3N6","INSA-A-Mix3","INSA-A-Mix4")
 
 for (i in 1:length(fasta_files)){
   bam <- paste0("data_sequencing/",sample_file,"/mapped_sorted_BAM/",fasta_files[i],"_mapped_sorted",file_name,".bam")
@@ -120,19 +118,19 @@ for (i in 1:length(fasta_files)){
   )
   
   coverage_track <- DataTrack(
-  range = virus_ranges,          # your data
-  type = "histogram",           # type of track
-  name = "Coverage",            # track title
-  ylab = "Read Depth",          # y-axis label
-  col.histogram = "steelblue"    # color
+  range = virus_ranges,
+  type = "histogram",
+  name = "Coverage",
+  ylab = "Read Depth",
+  col.histogram = "steelblue"
 )
   
   displayPars(coverage_track) <- list(
-  background.panel = "white",   # background of the plotting area (y-axis area)
-  background.title = "white",   # background of the track title
-  col.axis = "black",           # axis lines and tick marks
-  col.title = "black",          # y-axis title text
-  col.frame = NA                # remove border (optional)
+  background.panel = "white",
+  background.title = "white",
+  col.axis = "black",
+  col.title = "black",
+  col.frame = NA
 )
   
   axisTrack <- GenomeAxisTrack()
@@ -159,7 +157,7 @@ length(fastq_data)
 ```
 
 
-```{r}
+```{r Use Nanoplot for statistical value of fastq files}
 for (i in 1:length(fasta_files)){
   
   # BAM -> fastq
@@ -174,7 +172,7 @@ for (i in 1:length(fasta_files)){
 ```
 
 
-```{r, FlagStats}
+```{r, FlagStats for computing of number of mapped reads}
 
 file_name <- "_virus"
 for (fasta_file in fasta_files){
@@ -198,11 +196,10 @@ system2(command='docker',args=myarg)
 
 myarg <- paste0("run --rm -v ./../:/docker_data --cpus=4 biocontainers/bcftools:v1.9-1-deb_cv1 sh -c 'bcftools consensus -f /docker_data/data_processed/virus/dengue/dengue_type_2/NC_001474.2.fasta -o /docker_data/data_sequencing/2/VCF/barcode_09_corrected.fasta /docker_data/data_sequencing/2/VCF/barcode_09.vcf.gz'")
 system2(command='docker',args=myarg)
-
 ```
 
 
-```{r}
+```{r Small function to merge all fastq.gz files in a folder from raw Oxford Nanopore output}
 library(R.utils)
 # Function to merge all fastq.gz files into one
 merge_all_fastq_files <- function(folder_path) {
@@ -224,10 +221,5 @@ merge_all_fastq_files <- function(folder_path) {
 # Example usage
 merge_all_fastq_files("../data_sequencing/5/raw/barcode17")
 
-
 ```
-
-
-
-
 

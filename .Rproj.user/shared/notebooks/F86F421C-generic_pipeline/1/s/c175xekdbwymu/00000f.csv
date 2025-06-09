@@ -1,5 +1,5 @@
 "0","virus_genome_path <- ""../data_processed/virus/dengue/dengue_type_2/"""
-"0","vector_genome_path <- c(""../data_processed/vector/aedes/aegypty/SRR14655772"","
-"0","                     ""../data_processed/vector/aedes/albopictus/SRR8482204"")"
-"0","k <- 7"
+"0","vector_genome_path <- c(""../data_processed/vector/aedes/aegypty/SRR14655772"")#,"
+"0","                     #""../data_processed/vector/aedes/albopictus/SRR8482204"")"
+"0","k <- 5"
 "0","x <- 500"

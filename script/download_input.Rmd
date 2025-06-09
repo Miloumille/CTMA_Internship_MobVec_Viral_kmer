@@ -49,6 +49,6 @@ download_virus(output_path ,accession_id)
 ```{r}
 accession_id <- "SRR14655772"
 output_dir <- "../data_processed/vector/aedes/aegypty/"
-number_of_sequences <- "10000"
+number_of_sequences <- "100000"
 download_fastq_vector(accession_id, output_dir, number_of_sequences)
 ```

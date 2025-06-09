@@ -16,9 +16,9 @@ library(ShortRead)
 
 ```{r define pipeline variables}
 virus_genome_path <- "../data_processed/virus/dengue/dengue_type_2/"
-vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR14655772",
-                     "../data_processed/vector/aedes/albopictus/SRR8482204")
-k <- 7
+vector_genome_path <- c("../data_processed/vector/aedes/aegypty/SRR14655772")#,
+                     #"../data_processed/vector/aedes/albopictus/SRR8482204")
+k <- 5
 x <- 500
 ```
 
@@ -58,62 +58,12 @@ ggplot(complete_kmer_stats, aes(x = Distribution_score, y = Enrichment_score, co
   geom_text(aes(label = paste0(Kmer, "\n", mean_count)), 
             vjust = -0.5, size = 2, show.legend = FALSE) +
   labs(title = "frequency_virus / frequency_mos",
-       x = "mean count per virus / max log10 segment in virus genome",
+       x = "mean count per virus / sd segment in virus genome",
        y = " frequency virus / frequency mos") +
   theme_minimal() +
   theme(axis.text.x = element_text(hjust = 1)) +
   expand_limits(x = max(complete_kmer_stats$Distribution_score) * 1.05, 
                 y = max(complete_kmer_stats$Enrichment_score) * 1.1)
 ```
-
-# Ongoing improvements
-
-```{r}
-get_stats_kmers_all_types <- function(df_virus) {  
-  # Drop lines that correspond to the distance between first nucleotide and first kmer
-  df_virus <- df_virus %>% 
-    filter(!is.na(segm_size)) 
-  
-  virus_values <- df_virus %>%
-    group_by(SequenceName, Kmer,Type) %>%
-    summarize(mean_segm_size = mean(log10(segm_size), na.rm = TRUE),
-              sd_segm_size = ifelse(n() > 1, sd(log10(segm_size), na.rm = TRUE), 0),
-              count = n(),
-              freq = n()/max(Position),
-              .groups = 'drop')
-  
-  results <- virus_values %>%
-    group_by(Kmer) %>%
-    summarize(
-      mean_mean_log10_segments = mean(mean_segm_size, na.rm = TRUE), 
-      mean_sd_log10_segments = mean(sd_segm_size, na.rm = TRUE), 
-      mean_count = mean(count, na.rm = TRUE),
-      sd_count = ifelse(n() > 1, sd(count, na.rm = TRUE), NA), 
-      mean_freq_virus = mean(freq, na.rm = TRUE), 
-      .groups = 'drop'
-    )
-  return(results)
-}
-v_kmers_stats <- get_stats_kmers_all_types(v_kmer_pos_df)
-complete_kmer_stats <- get_vector_stats_kmers(v_kmers_stats, vector_genome_path)
-
-complete_kmer_stats$x_value <- complete_kmer_stats$mean_count / mean(c(mean(complete_kmer_stats$mean_sd_log10_segments),complete_kmer_stats$mean_sd_log10_segments))
-complete_kmer_stats$y_value <- (log10(complete_kmer_stats$mean_freq_virus) - log10(complete_kmer_stats$freq_m))
-
-complete_kmer_stats_filtered <- complete_kmer_stats %>%
-  group_by(Kmer) %>%
-  filter(all(mean_count > 10)) %>%
-  ungroup()
-
-# Now plot the filtered data
-ggplot(complete_kmer_stats_filtered, aes(x = x_value, y = y_value, color = Kmer, shape = accession_id)) + 
-  geom_point(size = 2) +  # Points for each observation
-  labs(title = "frequency_virus / frequency_mos", 
-       x = "count per virus / sd segm virus", 
-       y = " log10(frequency virus) - log10(frequency mos)") + 
-  theme_minimal() + 
-  theme(axis.text.x = element_text(hjust = 1)) + 
-  expand_limits(x = max(complete_kmer_stats_filtered$x_value) * 1.05,  
-                y = max(complete_kmer_stats_filtered$y_value) * 1.1)
 
 ```
