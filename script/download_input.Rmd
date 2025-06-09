@@ -38,17 +38,17 @@ download_fastq_vector <- function(accession_id, output_dir, n_reads) {
 # Download Virus genomes.
 
 ```{r}
-output_path <- "../data_processed/virus/west_nile/"
+output_path <- "../data_processed/virus/dengue/dengue_type_2/"
 
-accession_id <- "LC817237.1"
+accession_id <- "MZ130529.1"
 download_virus(output_path ,accession_id)
 ```
 
 # Download Vector fastq sequences.
 
 ```{r}
-accession_id <- "SRR29420355"
+accession_id <- "SRR14655772"
 output_dir <- "../data_processed/vector/aedes/aegypty/"
-number_of_sequences <- "100000"
+number_of_sequences <- "10000"
 download_fastq_vector(accession_id, output_dir, number_of_sequences)
 ```
