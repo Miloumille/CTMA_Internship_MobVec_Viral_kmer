@@ -6,6 +6,8 @@ data_processed/vector/aedes/*
 !data_processed/vector/aedes/.gitkeep
 data_processed/ref_vector/*
 data_sequencing/*
+!data_sequencing/.gitkeep
+
 reports/*
 !reports/.gitkeep
 
